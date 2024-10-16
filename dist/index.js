@@ -115,7 +115,9 @@ async function deployStack({ portainerHost, token, swarmId, endpointId, stackNam
                 endpointId: existingStack.EndpointId
             }, {
                 env: existingStack.Env,
-                stackFileContent: stackDefinitionToDeploy
+                stackFileContent: stackDefinitionToDeploy,
+                prune: true,
+                pullImage: true
             });
             core.info('Successfully updated existing stack');
         }

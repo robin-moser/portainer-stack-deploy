@@ -28,17 +28,8 @@ export class PortainerApi {
     })
   }
 
-  async login({ username, password }: { username: string; password: string }): Promise<void> {
-    const { data } = await this.axiosInstance.post<{ jwt: string }>('/auth', {
-      username,
-      password
-    })
-    this.axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${data.jwt}`
-  }
-
-  async logout(): Promise<void> {
-    await this.axiosInstance.post('/auth/logout')
-    this.axiosInstance.defaults.headers.common['Authorization'] = ''
+  async useToken(token: string): Promise<void> {
+    this.axiosInstance.defaults.headers.common['X-API-Key'] = token
   }
 
   async getStacks(): Promise<StackData[]> {
@@ -47,10 +38,10 @@ export class PortainerApi {
   }
 
   async createStack(params: CreateStackParams, body: CreateStackBody): Promise<void> {
-    await this.axiosInstance.post('/stacks', body, { params })
+    await this.axiosInstance.post('/stacks', body, { params: params })
   }
 
   async updateStack(id: number, params: UpdateStackParams, body: UpdateStackBody): Promise<void> {
-    await this.axiosInstance.put(`/stacks/${id}`, body, { params })
+    await this.axiosInstance.put(`/stacks/${id}`, body, { params: params })
   }
 }

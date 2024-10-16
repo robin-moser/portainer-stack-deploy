@@ -6,8 +6,7 @@ import * as core from '@actions/core'
 
 type DeployStack = {
   portainerHost: string
-  username: string
-  password: string
+  token: string
   swarmId?: string
   endpointId: number
   stackName: string
@@ -50,8 +49,7 @@ function generateNewStackDefinition(
 
 export async function deployStack({
   portainerHost,
-  username,
-  password,
+  token,
   swarmId,
   endpointId,
   stackName,
@@ -68,11 +66,9 @@ export async function deployStack({
   )
   core.debug(stackDefinitionToDeploy)
 
-  core.info('Logging in to Portainer instance...')
-  await portainerApi.login({
-    username,
-    password
-  })
+  await portainerApi.useToken(token)
+
+  core.info(`Using host: ${portainerHost}`)
 
   try {
     const allStacks = await portainerApi.getStacks()
@@ -98,7 +94,7 @@ export async function deployStack({
         {
           type: swarmId ? StackType.SWARM : StackType.COMPOSE,
           method: 'string',
-          endpointId
+          endpointId: endpointId
         },
         {
           name: stackName,
@@ -113,6 +109,5 @@ export async function deployStack({
     throw error
   } finally {
     core.info(`Logging out from Portainer instance...`)
-    await portainerApi.logout()
   }
 }

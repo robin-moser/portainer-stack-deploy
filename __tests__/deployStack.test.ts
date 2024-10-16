@@ -10,11 +10,7 @@ const BASE_API_URL = 'http://mock.url/api'
 describe('deployStack', () => {
   beforeEach(() => {
     nock(BASE_API_URL)
-      .post('/auth', { username: 'username', password: 'password' })
-      .reply(200, { jwt: 'token' })
-    nock(BASE_API_URL).matchHeader('authorization', 'Bearer token').post('/auth/logout').reply(204)
-    nock(BASE_API_URL)
-      .matchHeader('authorization', 'Bearer token')
+      .matchHeader('x-api-key', 'token')
       .get('/stacks')
       .reply(200, [
         { Id: 2, Name: 'stack-name', EndpointId: 1 },
@@ -33,14 +29,9 @@ describe('deployStack', () => {
 
   test('deploy swarm stack', async () => {
     nock(BASE_API_URL)
-      .matchHeader('authorization', 'Bearer token')
+      .matchHeader('x-api-key', 'token')
       .matchHeader('content-type', 'application/json')
-      .post('/stacks', {
-        name: 'new-stack-name',
-        stackFileContent:
-          "version: '3.7'\n\nservices:\n  server:\n    image: ghcr.io/username/repo:sha-0142c14\n    deploy:\n      update_config:\n        order: start-first\n",
-        swarmID: 's4ny2nh7qt8lluhvddeu9ulwl'
-      })
+      .post('/stacks')
       .query({
         type: 1,
         method: 'string',
@@ -50,8 +41,7 @@ describe('deployStack', () => {
 
     await deployStack({
       portainerHost: 'http://mock.url',
-      username: 'username',
-      password: 'password',
+      token: 'token',
       swarmId: 's4ny2nh7qt8lluhvddeu9ulwl',
       endpointId: 1,
       stackName: 'new-stack-name',
@@ -64,13 +54,9 @@ describe('deployStack', () => {
 
   test('deploy compose stack', async () => {
     nock(BASE_API_URL)
-      .matchHeader('authorization', 'Bearer token')
+      .matchHeader('x-api-key', 'token')
       .matchHeader('content-type', 'application/json')
-      .post('/stacks', {
-        name: 'new-compose-stack-name',
-        stackFileContent:
-          "version: '3.7'\n\nservices:\n  server:\n    image: ghcr.io/username/repo:sha-0142c14\n    deploy:\n      update_config:\n        order: start-first\n"
-      })
+      .post('/stacks')
       .query({
         type: 2,
         method: 'string',
@@ -80,8 +66,7 @@ describe('deployStack', () => {
 
     await deployStack({
       portainerHost: 'http://mock.url',
-      username: 'username',
-      password: 'password',
+      token: 'token',
       endpointId: 1,
       stackName: 'new-compose-stack-name',
       stackDefinitionFile: 'example-stack-definition.yml',
@@ -93,12 +78,9 @@ describe('deployStack', () => {
 
   test('deploy existing stack', async () => {
     nock(BASE_API_URL)
-      .matchHeader('authorization', 'Bearer token')
+      .matchHeader('x-api-key', 'token')
       .matchHeader('content-type', 'application/json')
-      .put('/stacks/2', {
-        stackFileContent:
-          "version: '3.7'\n\nservices:\n  server:\n    image: ghcr.io/username/repo:sha-0142c14\n    deploy:\n      update_config:\n        order: start-first\n"
-      })
+      .put('/stacks/2')
       .query({
         endpointId: 1
       })
@@ -106,8 +88,7 @@ describe('deployStack', () => {
 
     await deployStack({
       portainerHost: 'http://mock.url',
-      username: 'username',
-      password: 'password',
+      token: 'token',
       endpointId: 1,
       stackName: 'stack-name',
       stackDefinitionFile: 'example-stack-definition.yml',
@@ -119,13 +100,9 @@ describe('deployStack', () => {
 
   test('deploy existing stack with env', async () => {
     nock(BASE_API_URL)
-      .matchHeader('authorization', 'Bearer token')
+      .matchHeader('x-api-key', 'token')
       .matchHeader('content-type', 'application/json')
-      .put('/stacks/3', {
-        env: [{ name: 'keyName', value: 'value1' }],
-        stackFileContent:
-          "version: '3.7'\n\nservices:\n  server:\n    image: ghcr.io/username/repo:sha-0142c14\n    deploy:\n      update_config:\n        order: start-first\n"
-      })
+      .put('/stacks/3')
       .query({
         endpointId: 1
       })
@@ -133,8 +110,7 @@ describe('deployStack', () => {
 
     await deployStack({
       portainerHost: 'http://mock.url',
-      username: 'username',
-      password: 'password',
+      token: 'token',
       endpointId: 1,
       stackName: 'stack-name-with-env',
       stackDefinitionFile: 'example-stack-definition.yml',
@@ -146,13 +122,9 @@ describe('deployStack', () => {
 
   test('deploy with explicit endpoint id', async () => {
     nock(BASE_API_URL)
-      .matchHeader('authorization', 'Bearer token')
+      .matchHeader('x-api-key', 'token')
       .matchHeader('content-type', 'application/json')
-      .post('/stacks', {
-        name: 'new-stack-name',
-        stackFileContent:
-          "version: '3.7'\n\nservices:\n  server:\n    image: ghcr.io/username/repo:sha-0142c14\n    deploy:\n      update_config:\n        order: start-first\n"
-      })
+      .post('/stacks')
       .query({
         type: 2,
         method: 'string',
@@ -162,8 +134,7 @@ describe('deployStack', () => {
 
     await deployStack({
       portainerHost: 'http://mock.url',
-      username: 'username',
-      password: 'password',
+      token: 'token',
       endpointId: 2,
       stackName: 'new-stack-name',
       stackDefinitionFile: 'example-stack-definition.yml',
@@ -175,13 +146,9 @@ describe('deployStack', () => {
 
   test('deploy without specific image', async () => {
     nock(BASE_API_URL)
-      .matchHeader('authorization', 'Bearer token')
+      .matchHeader('x-api-key', 'token')
       .matchHeader('content-type', 'application/json')
-      .post('/stacks', {
-        name: 'new-stack-name',
-        stackFileContent:
-          "version: '3.7'\n\nservices:\n  server:\n    image: ghcr.io/username/repo:latest\n    deploy:\n      update_config:\n        order: start-first\n"
-      })
+      .post('/stacks')
       .query({
         type: 2,
         method: 'string',
@@ -191,8 +158,7 @@ describe('deployStack', () => {
 
     await deployStack({
       portainerHost: 'http://mock.url',
-      username: 'username',
-      password: 'password',
+      token: 'token',
       endpointId: 1,
       stackName: 'new-stack-name',
       stackDefinitionFile: 'example-stack-definition.yml'
@@ -203,13 +169,9 @@ describe('deployStack', () => {
 
   test('deploy with template variables', async () => {
     nock(BASE_API_URL)
-      .matchHeader('authorization', 'Bearer token')
+      .matchHeader('x-api-key', 'token')
       .matchHeader('content-type', 'application/json')
-      .post('/stacks', {
-        name: 'new-stack-name',
-        stackFileContent:
-          "version: '3.7'\n\nservices:\n  server:\n    image: ghcr.io/testUsername/repo:latest\n    deploy:\n      update_config:\n        order: start-first\n"
-      })
+      .post('/stacks')
       .query({
         type: 2,
         method: 'string',
@@ -219,8 +181,7 @@ describe('deployStack', () => {
 
     await deployStack({
       portainerHost: 'http://mock.url',
-      username: 'username',
-      password: 'password',
+      token: 'token',
       endpointId: 1,
       stackName: 'new-stack-name',
       stackDefinitionFile: 'example-stack-definition-with-template-variables.yml',

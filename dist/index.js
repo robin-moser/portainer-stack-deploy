@@ -18,26 +18,18 @@ class PortainerApi {
             baseURL: `${host}/api`
         });
     }
-    async login({ username, password }) {
-        const { data } = await this.axiosInstance.post('/auth', {
-            username,
-            password
-        });
-        this.axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${data.jwt}`;
-    }
-    async logout() {
-        await this.axiosInstance.post('/auth/logout');
-        this.axiosInstance.defaults.headers.common['Authorization'] = '';
+    async useToken(token) {
+        this.axiosInstance.defaults.headers.common['X-API-Key'] = token;
     }
     async getStacks() {
         const { data } = await this.axiosInstance.get('/stacks');
         return data;
     }
     async createStack(params, body) {
-        await this.axiosInstance.post('/stacks', body, { params });
+        await this.axiosInstance.post('/stacks', body, { params: params });
     }
     async updateStack(id, params, body) {
-        await this.axiosInstance.put(`/stacks/${id}`, body, { params });
+        await this.axiosInstance.put(`/stacks/${id}`, body, { params: params });
     }
 }
 exports.PortainerApi = PortainerApi;
@@ -107,15 +99,12 @@ function generateNewStackDefinition(stackDefinitionFile, templateVariables, imag
     core.info(`Inserting image ${image} into the stack definition`);
     return stackDefinition.replace(new RegExp(`${imageWithoutTag}(:.*)?\n`), `${image}\n`);
 }
-async function deployStack({ portainerHost, username, password, swarmId, endpointId, stackName, stackDefinitionFile, templateVariables, image }) {
+async function deployStack({ portainerHost, token, swarmId, endpointId, stackName, stackDefinitionFile, templateVariables, image }) {
     const portainerApi = new api_1.PortainerApi(portainerHost);
     const stackDefinitionToDeploy = generateNewStackDefinition(stackDefinitionFile, templateVariables, image);
     core.debug(stackDefinitionToDeploy);
-    core.info('Logging in to Portainer instance...');
-    await portainerApi.login({
-        username,
-        password
-    });
+    await portainerApi.useToken(token);
+    core.info(`Using host: ${portainerHost}`);
     try {
         const allStacks = await portainerApi.getStacks();
         const existingStack = allStacks.find(s => s.Name === stackName);
@@ -135,7 +124,7 @@ async function deployStack({ portainerHost, username, password, swarmId, endpoin
             await portainerApi.createStack({
                 type: swarmId ? StackType.SWARM : StackType.COMPOSE,
                 method: 'string',
-                endpointId
+                endpointId: endpointId
             }, {
                 name: stackName,
                 stackFileContent: stackDefinitionToDeploy,
@@ -150,7 +139,6 @@ async function deployStack({ portainerHost, username, password, swarmId, endpoin
     }
     finally {
         core.info(`Logging out from Portainer instance...`);
-        await portainerApi.logout();
     }
 }
 exports.deployStack = deployStack;
@@ -199,10 +187,7 @@ async function run() {
         const portainerHost = core.getInput('portainer-host', {
             required: true
         });
-        const username = core.getInput('username', {
-            required: true
-        });
-        const password = core.getInput('password', {
+        const token = core.getInput('token', {
             required: true
         });
         const swarmId = core.getInput('swarm-id', {
@@ -225,8 +210,7 @@ async function run() {
         });
         await (0, deployStack_1.deployStack)({
             portainerHost,
-            username,
-            password,
+            token,
             swarmId,
             endpointId: parseInt(endpointId) || 1,
             stackName,

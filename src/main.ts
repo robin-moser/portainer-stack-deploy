@@ -7,10 +7,7 @@ export async function run(): Promise<void> {
     const portainerHost: string = core.getInput('portainer-host', {
       required: true
     })
-    const username: string = core.getInput('username', {
-      required: true
-    })
-    const password: string = core.getInput('password', {
+    const token: string = core.getInput('token', {
       required: true
     })
     const swarmId: string = core.getInput('swarm-id', {
@@ -34,8 +31,7 @@ export async function run(): Promise<void> {
 
     await deployStack({
       portainerHost,
-      username,
-      password,
+      token,
       swarmId,
       endpointId: parseInt(endpointId) || 1,
       stackName,

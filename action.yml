@@ -1,6 +1,6 @@
-name: 'Deploy your stack to Portainer'
-description: 'Github Action to deploy a stack to a Portainer instance'
-author: 'Carl Rygart <carlrygart> && AlexPshkov'
+name: 'Portainer Stack Deploy'
+description: 'GitHub Action to deploy and update stacks on Portainer v2 with support for multiple endpoints'
+author: 'Carl Rygart <carlrygart>, AlexPshkov, milkfish and contributors'
 branding:
   icon: 'cloud'
   color: 'blue'
@@ -17,7 +17,8 @@ inputs:
     description: 'ID of the swarm. Only required if you deploy to a swarm.'
   endpoint-id:
     required: false
-    description: 'ID of the Portainer node to deploy to'
+    default: '1'
+    description: 'ID of the endpoint to deploy the stack to. When specified, only stacks within this endpoint will be considered for updates.'
   stack-name:
     required: true
     description: 'Name for the Portainer stack'

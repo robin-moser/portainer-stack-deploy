@@ -16,7 +16,7 @@ Portainer-stack-deploy is a GitHub Action for deploying a newly updated stack to
 | username           | Username for the Portainer login. **NOTE: Do not use admin account!** Create a new CI specific login instead                                                                 | **Required** |
 | password           | Password for the Portainer login                                                                                                                                             | **Required** |
 | swarm-id           | ID of the swarm. Only required if you deploy to a swarm                                                                                                                      |              |
-| endpoint-id        | ID of the Portainer node to deploy to                                                                                                                                        | 1            |
+| endpoint-id        | ID of the endpoint to deploy the stack to. When specified, only stacks within this endpoint will be considered for updates. | No | `1` |
 | stack-name         | Name for the Portainer stack                                                                                                                                                 | **Required** |
 | stack-definition   | The path to the docker-compose stack stack definition file from repo root, eg. `stack-definition.yml`                                                                        | **Required** |
 | template-variables | If given, these variables will be replaced in docker-compose file by handlebars                                                                                              |              |
@@ -110,3 +110,24 @@ npm test
 ```sh
 npm run all
 ```
+
+## Stack Deployment Behavior
+
+When deploying or updating a stack:
+- If `endpoint-id` is specified, the action will only look for existing stacks within that endpoint
+- When multiple stacks with the same name exist across different endpoints, the action will correctly target the stack in the specified endpoint
+- If no stack is found in the specified endpoint, a new stack will be created
+
+### Parameters
+
+| Input              | Description                                                                                                                                                                  | Required     | Default |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ------- |
+| portainer-host     | Portainer host, eg. `https://myportainer.instance.com`                                                                                                                       | **Required** |
+| username           | Username for the Portainer login. **NOTE: Do not use admin account!** Create a new CI specific login instead                                                                 | **Required** |
+| password           | Password for the Portainer login                                                                                                                                             | **Required** |
+| swarm-id           | ID of the swarm. Only required if you deploy to a swarm                                                                                                                      |              |
+| endpoint-id        | ID of the endpoint to deploy the stack to. When specified, only stacks within this endpoint will be considered for updates. | No | `1` |
+| stack-name         | Name for the Portainer stack                                                                                                                                                 | **Required** |
+| stack-definition   | The path to the docker-compose stack stack definition file from repo root, eg. `stack-definition.yml`                                                                        | **Required** |
+| template-variables | If given, these variables will be replaced in docker-compose file by handlebars                                                                                              |              |
+| image              | The URI of the container image to insert into the stack definition, eg. `ghcr.io/username/repo:sha-676cae2`. Will use existing image inside stack definition if not provided |              |

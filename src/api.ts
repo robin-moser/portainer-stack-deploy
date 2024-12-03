@@ -37,8 +37,9 @@ export class PortainerApi {
     this.axiosInstance.defaults.headers.common['X-API-Key'] = token
   }
 
-  async getStacks(): Promise<StackData[]> {
-    const { data } = await this.axiosInstance.get<StackData[]>('/stacks')
+  async getStacks(endpointId?: number): Promise<StackData[]> {
+    const params = endpointId ? { filters: JSON.stringify({ EndpointId: endpointId }) } : undefined
+    const { data } = await this.axiosInstance.get<StackData[]>('/stacks', { params })
     return data
   }
 

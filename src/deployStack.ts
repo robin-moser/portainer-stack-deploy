@@ -71,11 +71,11 @@ export async function deployStack({
   core.info(`Using host: ${portainerHost}`)
 
   try {
-    const allStacks = await portainerApi.getStacks()
+    const allStacks = await portainerApi.getStacks(endpointId)
     const existingStack = allStacks.find(s => s.Name === stackName)
 
     if (existingStack) {
-      core.info(`Found existing stack with name: ${stackName}`)
+      core.info(`Found existing stack with name: ${stackName} in endpoint: ${endpointId}`)
       core.info('Updating existing stack...')
       await portainerApi.updateStack(
         existingStack.Id,

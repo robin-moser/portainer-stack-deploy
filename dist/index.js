@@ -21,8 +21,9 @@ class PortainerApi {
     async useToken(token) {
         this.axiosInstance.defaults.headers.common['X-API-Key'] = token;
     }
-    async getStacks() {
-        const { data } = await this.axiosInstance.get('/stacks');
+    async getStacks(endpointId) {
+        const params = endpointId ? { filters: JSON.stringify({ EndpointId: endpointId }) } : undefined;
+        const { data } = await this.axiosInstance.get('/stacks', { params });
         return data;
     }
     async createStack(params, body) {
@@ -106,10 +107,10 @@ async function deployStack({ portainerHost, token, swarmId, endpointId, stackNam
     await portainerApi.useToken(token);
     core.info(`Using host: ${portainerHost}`);
     try {
-        const allStacks = await portainerApi.getStacks();
+        const allStacks = await portainerApi.getStacks(endpointId);
         const existingStack = allStacks.find(s => s.Name === stackName);
         if (existingStack) {
-            core.info(`Found existing stack with name: ${stackName}`);
+            core.info(`Found existing stack with name: ${stackName} in endpoint: ${endpointId}`);
             core.info('Updating existing stack...');
             await portainerApi.updateStack(existingStack.Id, {
                 endpointId: existingStack.EndpointId

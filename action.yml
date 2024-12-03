@@ -1,4 +1,4 @@
-name: 'Portainer Stack Deploy'
+name: 'milkfish/portainer-stack-deploy'
 description: 'GitHub Action to deploy and update stacks on Portainer v2 with support for multiple endpoints'
 author: 'Carl Rygart <carlrygart>, AlexPshkov, milkfish and contributors'
 branding:

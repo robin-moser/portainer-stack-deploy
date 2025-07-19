@@ -12,6 +12,7 @@ describe('deployStack', () => {
     nock(BASE_API_URL)
       .matchHeader('x-api-key', 'token')
       .get('/stacks')
+      .query({ filters: JSON.stringify({ EndpointId: 1 }) })
       .reply(200, [
         { Id: 2, Name: 'stack-name', EndpointId: 1 },
         {
@@ -121,6 +122,12 @@ describe('deployStack', () => {
   })
 
   test('deploy with explicit endpoint id', async () => {
+    nock(BASE_API_URL)
+      .matchHeader('x-api-key', 'token')
+      .get('/stacks')
+      .query({ filters: JSON.stringify({ EndpointId: 2 }) })
+      .reply(200, [])
+
     nock(BASE_API_URL)
       .matchHeader('x-api-key', 'token')
       .matchHeader('content-type', 'application/json')

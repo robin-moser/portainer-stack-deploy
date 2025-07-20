@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { StackType } from './deployStack'
 
 type EnvVariables = Array<{
   name: string
@@ -7,11 +8,12 @@ type EnvVariables = Array<{
 
 type EndpointId = number
 
-type StackData = {
+export type StackData = {
   Id: number
   Name: string
   EndpointId: EndpointId
   Env: EnvVariables
+  Type?: number
 }
 
 type CreateStackParams = { type: number; method: string; endpointId: EndpointId }
@@ -23,6 +25,10 @@ type UpdateStackBody = {
   stackFileContent: string
   prune: boolean
   pullImage: boolean
+}
+
+type StackFileContent = {
+  StackFileContent: string
 }
 
 export class PortainerApi {
@@ -86,5 +92,10 @@ export class PortainerApi {
 
   async updateStack(id: number, params: UpdateStackParams, body: UpdateStackBody): Promise<void> {
     await this.axiosInstance.put(`/stacks/${id}`, body, { params: params })
+  }
+
+  async getStackFile(id: number): Promise<StackFileContent> {
+    const { data } = await this.axiosInstance.get<StackFileContent>(`/stacks/${id}/file`)
+    return data
   }
 }

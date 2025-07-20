@@ -20,12 +20,12 @@ export async function run(): Promise<void> {
       required: true
     })
     const stackDefinitionFile: string = core.getInput('stack-definition', {
-      required: true
+      required: false
     })
     const templateVariables: string = core.getInput('template-variables', {
       required: false
     })
-    const image: string = core.getInput('image', {
+    const tagReplacements: string = core.getInput('tag-replacements', {
       required: false
     })
 
@@ -35,9 +35,9 @@ export async function run(): Promise<void> {
       swarmId,
       endpointId: parseInt(endpointId) || 1,
       stackName,
-      stackDefinitionFile,
+      stackDefinitionFile: stackDefinitionFile || undefined,
       templateVariables: templateVariables ? JSON.parse(templateVariables) : undefined,
-      image
+      tagReplacements: tagReplacements || undefined
     })
     core.info('✅ Deployment done')
   } catch (error) {

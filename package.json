@@ -1,8 +1,8 @@
 {
   "name": "portainer-stack-deploy",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Github Action to deploy a stack to a Portainer instance",
-  "author": "Carl Rygart <carlrygart>",
+  "author": "Robin Moser <robin-moser>",
   "license": "MIT",
   "main": "lib/main.js",
   "keywords": [
@@ -27,9 +27,11 @@
   },
   "devDependencies": {
     "@types/jest": "^28.1.4",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^18.0.0",
     "@typescript-eslint/parser": "^5.30.3",
     "@vercel/ncc": "^0.34.0",
+    "dotenv": "^17.2.0",
     "eslint": "^8.19.0",
     "eslint-plugin-github": "^4.3.6",
     "eslint-plugin-jest": "^26.5.3",

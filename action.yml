@@ -1,6 +1,6 @@
-name: 'milkfish/portainer-stack-deploy'
+name: 'robin-moser/portainer-stack-deploy'
 description: 'GitHub Action to deploy and update stacks on Portainer v2 with support for multiple endpoints'
-author: 'Carl Rygart <carlrygart>, AlexPshkov, milkfish and contributors'
+author: 'robin-moser'
 branding:
   icon: 'cloud'
   color: 'blue'
@@ -23,14 +23,14 @@ inputs:
     required: true
     description: 'Name for the Portainer stack'
   stack-definition:
-    required: true
+    required: false
     description: 'The path to the docker-compose stack stack definition file, eg. stack-definition.yml'
   template-variables:
     required: false
     description: 'If given, these variables will be replaced in docker-compose file by handlebars'
-  image:
+  tag-replacements:
     required: false
-    description: 'The URI of the container image to insert into the stack definition, eg. docker.pkg.github.com/username/repo/master'
+    description: 'Multiline string of image:tag combinations, each occurence of "image" will be deployed with the new "tag"'
 
 runs:
   using: 'node12'

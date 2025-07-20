@@ -89,7 +89,7 @@ jobs:
         shell: bash
 
       - name: Deploy stack to Portainer
-        uses: robin-moser/portainer-stack-deploy@v1
+        uses: robin-moser/portainer-stack-deploy@v2
         with:
           portainer-host: ${{ secrets.PORTAINER_HOST }}
           token: ${{ secrets.PORTAINER_API_KEY }}
@@ -127,7 +127,7 @@ It's possible to provide multiple replacements for different images.
 
 ```yaml
 - name: Update stack with new image tags
-  uses: robin-moser/portainer-stack-deploy@v1
+  uses: robin-moser/portainer-stack-deploy@v2
   with:
     portainer-host: ${{ secrets.PORTAINER_HOST }}
     token: ${{ secrets.PORTAINER_API_KEY }}

@@ -54,9 +54,18 @@ describe('deployStack Integration Tests', () => {
     }
   }
 
+  interface StackFileContent {
+    services: {
+      [key: string]: {
+        image: string
+        user?: string
+      }
+    }
+  }
+
   // Helper function to parse YAML content
-  function parseYamlContent(content: string): any {
-    return yaml.load(content)
+  function parseYamlContent(content: string): StackFileContent {
+    return yaml.load(content) as StackFileContent
   }
 
   beforeAll(async () => {

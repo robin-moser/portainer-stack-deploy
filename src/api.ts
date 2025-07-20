@@ -1,4 +1,5 @@
 import axios from 'axios'
+import * as semver from 'semver'
 import { StackType } from './deployStack'
 
 type EnvVariables = Array<{
@@ -77,7 +78,7 @@ export class PortainerApi {
   async createStack(params: CreateStackParams, body: CreateStackBody): Promise<void> {
     const version = await this.getVersion()
     // if version is less than 2.19.0, use the old endpoint
-    if (require('semver').lt(version, '2.19.0')) {
+    if (semver.lt(version, '2.19.0')) {
       await this.axiosInstance.post('/stacks', body, { params: params })
     } else {
       // create CreateStackParamsNew for new endpoint

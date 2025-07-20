@@ -35,7 +35,7 @@ describe('deployStack Unit Tests', () => {
   })
 
   // Helper function to setup basic stack listing mock
-  function mockGetStacks(stacks: StackData[] = [], swarmId?: string) {
+  function mockGetStacks(stacks: StackData[] = [], swarmId?: string): void {
     const filters = swarmId ? { SwarmId: swarmId } : { EndpointId: mockConfig.endpointId }
 
     nock(BASE_API_URL)
@@ -46,7 +46,7 @@ describe('deployStack Unit Tests', () => {
   }
 
   // Helper function to setup stack file content mock
-  function mockGetStackFile(stackId: number, content: string) {
+  function mockGetStackFile(stackId: number, content: string): void {
     nock(BASE_API_URL)
       .matchHeader('x-api-key', mockConfig.portainerToken)
       .get(`/stacks/${stackId}/file`)
@@ -54,7 +54,7 @@ describe('deployStack Unit Tests', () => {
   }
 
   // Helper function to setup version mock (for newer Portainer versions)
-  function mockGetVersion(version: string = '2.20.0') {
+  function mockGetVersion(version = '2.20.0'): void {
     nock(BASE_API_URL)
       .matchHeader('x-api-key', mockConfig.portainerToken)
       .get('/system/status')

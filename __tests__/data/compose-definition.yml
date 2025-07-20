@@ -1,0 +1,34 @@
+version: '3.8'
+
+# file: compose-stack-definition.yml
+
+services:
+  first:
+    # original: alpine:3.17
+    image: alpine:3.17
+    command: sleep 60
+    restart: 'no'
+
+  second:
+    # original: alpine:3.18
+    image: alpine:3.18
+    command: sleep 60
+    restart: 'no'
+
+  third:
+    # original: nginx:latest
+    image: nginx:latest
+    command: sleep 60
+    restart: 'no'
+
+  fourth:
+    # original: busybox:latest
+    image: busybox:latest
+    command: sleep 60
+    restart: 'no'
+
+  fifth:
+    # original: busybox
+    image: busybox
+    command: sleep 60
+    restart: 'no'

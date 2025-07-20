@@ -1,9 +1,9 @@
 name: 'robin-moser/portainer-stack-deploy'
-description: 'GitHub Action to deploy and update stacks on Portainer v2 with support for multiple endpoints'
+description: 'GitHub Action to deploy and update stacks over the Portainer API'
 author: 'robin-moser'
 branding:
   icon: 'cloud'
-  color: 'blue'
+  color: 'green'
 
 inputs:
   portainer-host:

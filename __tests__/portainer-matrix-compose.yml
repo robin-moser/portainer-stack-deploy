@@ -1,0 +1,40 @@
+version: '3.7'
+
+x-portainer-common: &portainer-common
+  command: >-
+    -H unix:///var/run/docker.sock
+    --admin-password='$$2a$$08$$RNEURq3N731VMYWZLqvqreCAyvCngr5Jn71SY.JKRUEILP5IdXqwC'
+    # admin-password: portainer-password-admin
+
+services:
+  portainer-2-11:
+    <<: *portainer-common
+    image: portainer/portainer-ce:2.11.1
+    ports:
+      - 16000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  portainer-2-15:
+    <<: *portainer-common
+    image: portainer/portainer-ce:2.15.1
+    ports:
+      - 16001:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  portainer-2-19:
+    <<: *portainer-common
+    image: portainer/portainer-ce:2.19.1
+    ports:
+      - 16002:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  portainer-2-27:
+    <<: *portainer-common
+    image: portainer/portainer-ce:2.27.1
+    ports:
+      - 16003:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
